@@ -1,0 +1,1 @@
+# Manager-Property-Registration
