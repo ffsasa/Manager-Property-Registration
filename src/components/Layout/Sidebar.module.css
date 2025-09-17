@@ -1,0 +1,103 @@
+.sidebar {
+  width: 280px;
+  background: linear-gradient(180deg, #5b36e6 0%, #8654ff 100%);
+  border-radius: 0 32px 32px 0;
+  padding: 40px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #ffffff;
+  box-shadow: 0 18px 36px rgba(45, 24, 104, 0.3);
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 40px;
+}
+
+.profileCard {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.18);
+  padding: 16px;
+  border-radius: 18px;
+  margin-bottom: 32px;
+}
+
+.avatar {
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.name {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.email {
+  font-size: 0.875rem;
+  opacity: 0.8;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.menuItem {
+  background: transparent;
+  border: none;
+  color: inherit;
+  text-align: left;
+  padding: 12px 16px;
+  border-radius: 14px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.menuItem:hover {
+  background: rgba(255, 255, 255, 0.18);
+  transform: translateX(4px);
+}
+
+.active {
+  background: rgba(255, 255, 255, 0.3);
+  font-weight: 600;
+}
+
+.footerNote {
+  font-size: 0.85rem;
+  opacity: 0.75;
+  text-align: center;
+}
+
+@media (max-width: 1200px) {
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    gap: 24px;
+    border-radius: 0 0 32px 32px;
+  }
+
+  .menu {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .menuItem {
+    flex: 1 1 200px;
+  }
+}
