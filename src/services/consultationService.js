@@ -31,11 +31,16 @@ const normalisePagination = (payload = {}, fallback = {}) => {
   };
 };
 
-export const fetchConsultations = async ({ page = 0, size = DEFAULT_PAGE_SIZE, token }) => {
+export const fetchConsultations = async ({ page = 0, size = DEFAULT_PAGE_SIZE, token, projectName }) => {
+    if (!projectName) {
+    throw new Error("projectName is required để gọi API consultations");
+  }
+
   const response = await apiClient(API_ENDPOINTS.consultations, {
     method: 'GET',
     token,
     params: {
+      projectName,
       page,
       size
     }

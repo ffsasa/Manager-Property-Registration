@@ -1,13 +1,9 @@
 import PropTypes from 'prop-types';
 import styles from './Sidebar.module.css';
+import { useProject } from '../../context/ProjectContext.jsx';  
 
 const PROPERTY_ITEMS = [
-  'Vinhomes Golden River',
-  'Vinhomes Central Park',
-  'Vinhomes Landmark 81',
-  'Vinhomes Golden River',
-  'Vinhomes Ocean Park',
-  'Vinhomes Smart City'
+  'Conic Boulevard'
 ];
 
 const Sidebar = ({ user }) => {
@@ -19,6 +15,8 @@ const Sidebar = ({ user }) => {
     .slice(0, 2)
     .map((part) => part[0]?.toUpperCase())
     .join('');
+
+  const { projectName, setProjectName } = useProject(); 
 
   return (
     <aside className={styles.sidebar}>
@@ -36,7 +34,10 @@ const Sidebar = ({ user }) => {
             <button
               type="button"
               key={`${property}-${index}`}
-              className={`${styles.menuItem} ${index === 0 ? styles.active : ''}`}
+              onClick={() => setProjectName(property)}   
+              className={`${styles.menuItem} ${
+                projectName === property ? styles.active : ""
+              }`}
             >
               {property}
             </button>
@@ -51,8 +52,8 @@ const Sidebar = ({ user }) => {
 Sidebar.propTypes = {
   user: PropTypes.shape({
     fullName: PropTypes.string,
-    email: PropTypes.string
-  })
+    email: PropTypes.string,
+  }),
 };
 
 export default Sidebar;

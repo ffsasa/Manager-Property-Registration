@@ -3,6 +3,7 @@ import { DEFAULT_PAGE_SIZE } from '../../constants/index.js';
 import { useAuth } from '../../hooks/useAuth.js';
 import { fetchConsultations } from '../../services/consultationService.js';
 import { formatDate } from '../../utils/formatDate.js';
+import { useProject } from '../../context/ProjectContext.jsx';
 import Pagination from '../Pagination/Pagination.jsx';
 import styles from './ConsultationList.module.css';
 
@@ -13,6 +14,7 @@ const getFieldValue = (item, keys, fallback = '---') => {
 
 const ConsultationList = () => {
   const { token } = useAuth();
+  const { projectName } = useProject(); 
   const [page, setPage] = useState(0);
   const [size] = useState(DEFAULT_PAGE_SIZE);
   const [items, setItems] = useState([]);
@@ -22,11 +24,11 @@ const ConsultationList = () => {
   const [error, setError] = useState(null);
 
   const loadConsultations = useCallback(async () => {
-    if (!token) return;
+    if (!token || !projectName) return;
     setLoading(true);
     setError(null);
     try {
-      const response = await fetchConsultations({ page, size, token });
+      const response = await fetchConsultations({ page, size, token, projectName });
       setItems(response.items);
       setTotalPages(response.totalPages);
       setTotalItems(response.totalItems);
