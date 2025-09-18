@@ -40,7 +40,7 @@ const ConsultationList = () => {
     } finally {
       setLoading(false);
     }
-  }, [page, size, token]);
+  }, [page, size, token, projectName]);
 
   useEffect(() => {
     loadConsultations();
