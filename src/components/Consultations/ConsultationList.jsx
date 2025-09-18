@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { DEFAULT_PAGE_SIZE } from '../../constants/index.js';
 import { useAuth } from '../../hooks/useAuth.js';
-import { deleteConsultation, fetchConsultations } from '../../services/consultationService.js';
+import { deleteConsultation, fetchConsultations, checkConsultation } from '../../services/consultationService.js';
 import { formatDate } from '../../utils/formatDate.js';
 import { useProject } from '../../context/ProjectContext.jsx';
 import Pagination from '../Pagination/Pagination.jsx';
@@ -23,6 +23,7 @@ const ConsultationList = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [deletingIds, setDeletingIds] = useState([]);
+  const [checkingIds, setCheckingIds] = useState([]);
 
   const loadConsultations = useCallback(async () => {
     if (!token || !projectName) return;
@@ -58,7 +59,7 @@ const ConsultationList = () => {
         const phoneNumber = getFieldValue(item, ['phoneNumber', 'phone', 'mobile', 'contactNumber']);
         const demand = getFieldValue(item, ['demand', 'requirement', 'note', 'consultNeed', 'description']);
         const createdAt = getFieldValue(item, ['createdAt', 'createdDate', 'createdTime', 'created_on', 'created']);
-        const checked = getFieldValue(item, ['isCheck', 'ischeck', 'checked', 'is_view'], true);
+        const checked = getFieldValue(item, ['isCheck', 'ischeck', 'checked', 'check', 'is_view'], true);
         const isNew = typeof checked === 'boolean' ? !checked : checked === 'false';
         const initials = customerName
           .split(' ')
@@ -69,6 +70,7 @@ const ConsultationList = () => {
           .toUpperCase();
 
         const itemId = item.id || item.consultationId;
+        const isChecking = checkingIds.includes(itemId);
 
         return {
           id: itemId || `${page}-${index}`,
@@ -78,10 +80,48 @@ const ConsultationList = () => {
           demand,
           createdAt: formatDate(createdAt),
           isNew,
-          initials
+          initials,
+          isChecking
         };
       }),
-    [items, page]
+        [checkingIds, items, page]
+  );
+
+  const handleRowClick = useCallback(
+    async (row) => {
+      if (!token || !row.canDelete || !row.isNew || row.isChecking) {
+        return;
+      }
+
+      setCheckingIds((prev) => (prev.includes(row.id) ? prev : [...prev, row.id]));
+      setError(null);
+
+      try {
+        await checkConsultation({ id: row.id, token });
+        setItems((prevItems) =>
+          prevItems.map((item) => {
+            const itemId = item.id || item.consultationId;
+            if (itemId === row.id) {
+              return {
+                ...item,
+                check: true,
+                isCheck: true,
+                ischeck: true,
+                checked: true,
+                is_view: true
+              };
+            }
+            return item;
+          })
+        );
+      } catch (err) {
+        const message = err.message || 'Không thể cập nhật trạng thái khách hàng';
+        setError(message);
+      } finally {
+        setCheckingIds((prev) => prev.filter((itemId) => itemId !== row.id));
+      }
+    },
+    [token]
   );
 
   const handleDelete = useCallback(
@@ -147,10 +187,34 @@ const ConsultationList = () => {
             ) : (
               rows.map((row) => {
                 const isDeleting = deletingIds.includes(row.id);
+                const rowClasses = [styles.tableRow];
+                if (row.isNew) {
+                  rowClasses.push(styles.clickableRow, styles.isNewRow);
+                }
                 return (
-                  <tr key={row.id}>
+                  <tr
+                    key={row.id}
+                    className={rowClasses.join(' ')}
+                    onClick={() => handleRowClick(row)}
+                    role={row.isNew ? 'button' : undefined}
+                    tabIndex={row.isNew ? 0 : undefined}
+                    onKeyDown={(event) => {
+                      if (!row.isNew) {
+                        return;
+                      }
+
+                      if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        handleRowClick(row);
+                      }
+                    }}
+                    aria-label={row.isNew ? 'Khách hàng mới, nhấn để đánh dấu đã xem' : undefined}
+                  >
                     <td>
                       <div className={styles.customerCell}>
+                        {row.isNew && (
+                          <span className={styles.newIndicator} title="Khách hàng mới" aria-hidden="true" />
+                        )}
                         <div className={styles.avatar}>{row.initials || 'KH'}</div>
                         <div>
                           <p className={styles.customerName}>{row.customerName}</p>
@@ -165,14 +229,14 @@ const ConsultationList = () => {
                     <td>{row.createdAt}</td>
                     <td className={styles.statusCell}>
                       <div className={styles.actions}>
-                        {row.isNew && (
-                          <span className={styles.newIndicator} title="Khách hàng mới" aria-label="Khách hàng mới" />
-                        )}
                         <button
                           type="button"
                           className={styles.deleteButton}
-                          onClick={() => handleDelete(row.id)}
-                          disabled={!row.canDelete || loading || isDeleting}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            handleDelete(row.id);
+                          }}
+                          disabled={!row.canDelete || loading || isDeleting || row.isChecking}
                         >
                           {isDeleting ? 'Đang xóa...' : 'Xóa'}
                         </button>

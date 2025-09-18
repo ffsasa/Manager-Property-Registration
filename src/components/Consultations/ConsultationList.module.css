@@ -51,6 +51,22 @@
   border-collapse: collapse;
 }
 
+.tableRow {
+  transition: background-color 0.2s ease;
+}
+
+.tableRow:hover {
+  background: rgba(152, 129, 255, 0.08);
+}
+
+.clickableRow {
+  cursor: pointer;
+}
+
+.isNewRow {
+  background: rgba(74, 222, 128, 0.08);
+}
+
 .table thead {
   background: #f4efff;
 }
@@ -75,6 +91,16 @@
   display: flex;
   align-items: center;
   gap: 16px;
+}
+
+.newIndicator {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 0 6px rgba(74, 222, 128, 0.25);
+  margin-right: 8px;
 }
 
 .avatar {
@@ -147,15 +173,6 @@
   transform: none;
 }
 
-.newIndicator {
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #4ade80;
-  box-shadow: 0 0 0 6px rgba(74, 222, 128, 0.25);
-}
-
 .emptyState {
   text-align: center;
   padding: 48px 0;
@@ -191,6 +208,12 @@
     overflow: hidden;
   }
 
+  .tableRow,
+  .tableRow:hover,
+  .isNewRow {
+    background: transparent;
+  }
+  
   .table td {
     padding: 12px 16px;
     border: none;

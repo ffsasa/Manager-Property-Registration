@@ -62,3 +62,14 @@ export const deleteConsultation = async ({ id, token }) => {
     token
   });
 };
+
+export const checkConsultation = async ({ id, token }) => {
+  if (!id) {
+    throw new Error('id is required để cập nhật trạng thái consultation');
+  }
+
+  return apiClient(API_ENDPOINTS.consultationCheck(id), {
+    method: 'PUT',
+    token
+  });
+};
