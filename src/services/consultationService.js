@@ -36,13 +36,16 @@ export const fetchConsultations = async ({ page = 0, size = DEFAULT_PAGE_SIZE, t
     throw new Error("projectName is required để gọi API consultations");
   }
 
+  const sort = 'createdAt'
+
   const response = await apiClient(API_ENDPOINTS.consultations, {
     method: 'GET',
     token,
     params: {
       projectName,
       page,
-      size
+      size,
+      sort
     }
   });
 

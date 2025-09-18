@@ -117,9 +117,10 @@
 
 .actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: center;
   gap: 12px;
+  margin-left: 9px;
 }
 
 .deleteButton {
