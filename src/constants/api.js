@@ -2,7 +2,8 @@ export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://api.co
 
 export const API_ENDPOINTS = {
     login: '/api/account/login',
-    consultations: '/api/consultation' 
+    consultations: '/api/consultation',
+    consultationDelete: (id) => `/api/consultation/delete/${id}`
 }
 
-export const DEFAULT_PAGE_SIZE = 10;
+export const DEFAULT_PAGE_SIZE = 5;

@@ -32,7 +32,7 @@ const normalisePagination = (payload = {}, fallback = {}) => {
 };
 
 export const fetchConsultations = async ({ page = 0, size = DEFAULT_PAGE_SIZE, token, projectName }) => {
-    if (!projectName) {
+  if (!projectName) {
     throw new Error("projectName is required để gọi API consultations");
   }
 
@@ -47,4 +47,15 @@ export const fetchConsultations = async ({ page = 0, size = DEFAULT_PAGE_SIZE, t
   });
 
   return normalisePagination(response, { page, size });
+};
+
+export const deleteConsultation = async ({ id, token }) => {
+  if (!id) {
+    throw new Error('id is required để xóa consultation');
+  }
+
+  return apiClient(API_ENDPOINTS.consultationDelete(id), {
+    method: 'PUT',
+    token
+  });
 };

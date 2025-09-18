@@ -112,7 +112,38 @@
 }
 
 .statusCell {
-  width: 60px;
+    width: 160px;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+}
+
+.deleteButton {
+  border: none;
+  background: #fee2e2;
+  color: #b91c1c;
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.deleteButton:not(:disabled):hover {
+  background: #fecaca;
+  box-shadow: 0 8px 16px rgba(239, 68, 68, 0.2);
+  transform: translateY(-1px);
+}
+
+.deleteButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
 }
 
 .newIndicator {

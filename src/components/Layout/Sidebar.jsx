@@ -1,10 +1,7 @@
 import PropTypes from 'prop-types';
 import styles from './Sidebar.module.css';
-import { useProject } from '../../context/ProjectContext.jsx';  
-
-const PROPERTY_ITEMS = [
-  'Conic Boulevard'
-];
+import { PROJECTS, DEFAULT_PROJECT_NAME } from '../../constants/index.js';
+import { useProject } from '../../context/ProjectContext.jsx';
 
 const Sidebar = ({ user }) => {
   const displayName = user?.fullName || 'Quản trị viên';
@@ -16,7 +13,8 @@ const Sidebar = ({ user }) => {
     .map((part) => part[0]?.toUpperCase())
     .join('');
 
-  const { projectName, setProjectName } = useProject(); 
+  const { projectName, setProjectName } = useProject();
+  const activeProject = projectName ?? DEFAULT_PROJECT_NAME;
 
   return (
     <aside className={styles.sidebar}>
@@ -30,13 +28,13 @@ const Sidebar = ({ user }) => {
           </div>
         </div>
         <nav className={styles.menu}>
-          {PROPERTY_ITEMS.map((property, index) => (
+          {PROJECTS.map((property, index) => (
             <button
               type="button"
               key={`${property}-${index}`}
-              onClick={() => setProjectName(property)}   
+              onClick={() => setProjectName(property)}
               className={`${styles.menuItem} ${
-                projectName === property ? styles.active : ""
+                activeProject === property ? styles.active : ''
               }`}
             >
               {property}
@@ -44,7 +42,15 @@ const Sidebar = ({ user }) => {
           ))}
         </nav>
       </div>
-      <p className={styles.footerNote}>Managed Listener</p>
+      <div className={styles.footer}>
+        <p className={styles.footerNote}>Managed Consultation</p>
+        <p className={styles.copyright}>
+            © 2025 ConicBoulevard. All rights reserved.
+        </p>
+        <p className={styles.devNote}>
+            Developed by An Tạ Ngọc (ffsasa)
+        </p>
+        </div>
     </aside>
   );
 };
@@ -52,8 +58,8 @@ const Sidebar = ({ user }) => {
 Sidebar.propTypes = {
   user: PropTypes.shape({
     fullName: PropTypes.string,
-    email: PropTypes.string,
-  }),
+    email: PropTypes.string
+  })
 };
 
 export default Sidebar;
